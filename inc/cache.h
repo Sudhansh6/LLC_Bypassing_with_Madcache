@@ -72,11 +72,40 @@ extern uint32_t PAGE_TABLE_LATENCY, SWAP_LATENCY;
 // LAST LEVEL CACHE
 #define LLC_SET NUM_CPUS*2048
 #define LLC_WAY 16
+// Threshold to determine if line in tracker set
+#define LLC_TRACKER_BOUND LLC_SET/16
 #define LLC_RQ_SIZE NUM_CPUS*L2C_MSHR_SIZE //48
 #define LLC_WQ_SIZE NUM_CPUS*L2C_MSHR_SIZE //48
 #define LLC_PQ_SIZE NUM_CPUS*32
 #define LLC_MSHR_SIZE NUM_CPUS*64
 #define LLC_LATENCY 20  // 4/5 (L1I or L1D) + 10 + 20 = 34/35 cycles
+
+// Custom DEFINES
+
+// Defining PC predictor
+// The table size
+#define PC_TBL_SIZE 1024
+// The policy counter size for PC
+#define POLICY_MAX_VAL (1<<6) - 1
+// Reference bit counter to check the number of references for each PC
+#define REF_MAX (1<<9) - 1
+// global policy counter bits
+#define MAX_GLOBAL_POLICY (1<<10)
+// Initial policy counter value
+#define INITIAL_POLICY (1<<5) - 2 // 011110
+// Policy check threshold
+#define POLICY_THRESH (1<<5)
+// Global policy check threshold
+#define GLOBAL_THRESH (1<<9)
+
+// Function to check if a given address is in the PC table
+int checkPCArray(uint64_t addr);
+// Function to check if the set is in the tracker sets
+int checkTrackerSet(uint32_t set);
+// Function that returns the lowest reference index
+int lowRefPC();
+// Bypass based on policy
+int checkBypass(uint64_t addr);
 
 class CACHE : public MEMORY {
   public:
@@ -225,3 +254,4 @@ class CACHE : public MEMORY {
 };
 
 #endif
+
