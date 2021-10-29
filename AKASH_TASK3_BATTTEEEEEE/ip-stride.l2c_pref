@@ -16,9 +16,9 @@
 #include "cache.h"
 
 #define IP_TRACKER_COUNT 1024
+#define MIN_PREFETCH_DEGREE 3
 #define PREFETCH_DEGREE 3
-
-
+#define MAX_PREFETCH_DEGREE 11
 
 class IP_TRACKER {
   public:
@@ -52,10 +52,11 @@ IP_TRACKER trackers[IP_TRACKER_COUNT];
 
 // ASSGN: CS341 Assignment5 changes for Task4
 int prefetch_throttle(int index){
-    // TODO: Need to vary the degree of prefetch based on prev performance
+    // Need to vary the degree of prefetch based on prev performance
     float fr = (trackers[index].cnt*1.0)/trackers[index].tot;
-    if(trackers[index].cnt <= 0.35) return 0;
-    else return 3;
+    int x = MIN_PREFETCH_DEGREE + (MAX_PREFETCH_DEGREE - MIN_PREFETCH_DEGREE)*fr;
+    return x;
+    // return PREFETCH_DEGREE;
 }
 
 void CACHE::l2c_prefetcher_initialize() 
