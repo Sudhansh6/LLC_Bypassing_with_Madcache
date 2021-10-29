@@ -20,6 +20,9 @@
 #define PREFETCH_DEGREE 3
 #define MAX_PREFETCH_DEGREE 11
 
+// ASSGN: define CS_PREFETCH so that Task1's cache.cc changes are not affected
+#define CS_PREFETCH
+
 class IP_TRACKER1 {
   public:
     // the IP we're tracking
@@ -131,7 +134,7 @@ void CACHE::l1d_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit
         trackers1[index].tot++;
         if(cache_hit==1) trackers1[index].cnt++;
 
-        // do some prefetching
+        // ASSGN: do some prefetching
         for (int i=0; i<prefetch_throttle1(index); i++) {
             uint64_t pf_address = (cl_addr + (stride*(i+1))) << LOG2_BLOCK_SIZE;
 
