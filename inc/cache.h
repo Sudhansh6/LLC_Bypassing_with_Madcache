@@ -80,6 +80,11 @@ extern uint32_t PAGE_TABLE_LATENCY, SWAP_LATENCY;
 #define LLC_MSHR_SIZE NUM_CPUS*64
 #define LLC_LATENCY 20  // 4/5 (L1I or L1D) + 10 + 20 = 34/35 cycles
 
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Custom DEFINES
 
 // Defining PC predictor
@@ -90,13 +95,15 @@ extern uint32_t PAGE_TABLE_LATENCY, SWAP_LATENCY;
 // Reference bit counter to check the number of references for each PC
 #define REF_MAX (1<<9) - 1
 // global policy counter bits
-#define MAX_GLOBAL_POLICY (1<<10)
+#define MAX_GLOBAL_POLICY (1<<10)-1
 // Initial policy counter value
-#define INITIAL_POLICY (1<<5) - 2 // 011110
+#define INITIAL_POLICY (1<<5) - 1 // 011111
 // Policy check threshold
 #define POLICY_THRESH (1<<5)
 // Global policy check threshold
 #define GLOBAL_THRESH (1<<9)
+// Probability for not bypassing (BBIP)
+#define bbip_epsilon 0.03
 
 // Function to check if a given address is in the PC table
 int checkPCArray(uint64_t addr);
@@ -106,6 +113,8 @@ int checkTrackerSet(uint32_t set);
 int lowRefPC();
 // Bypass based on policy
 int checkBypass(uint64_t addr);
+
+///////////////////////////////////////////////////////////////////////////////
 
 class CACHE : public MEMORY {
   public:
